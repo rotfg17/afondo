@@ -1,0 +1,297 @@
+  /*Importacion de letra*/
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+    /* Declaracion de colores*/
+    :root {
+        --blanco: #ffffff;
+        --oscuro: #212121;
+        --primario: #FFC107;
+        --secundario: #0097A7;
+        --gris: #757575;
+        --grisClaro: #DFE9F3;
+        --orange: #f39708;
+        --azulOscuro: #180560;
+        --claro: #efd2be;
+        --hueso: #f8f6f5;
+        --dark-orange: #ff6e00;
+        --orange-claro: #febd69;
+  
+    }
+
+    *{
+        margin: 0%;
+        padding: 0%;
+        text-decoration: none;
+        box-sizing: border-box;
+        list-style: none;
+    }
+
+    body {
+        width: 100%;
+        box-sizing: border-box;
+        
+    }
+
+    h1, h2, h3, h4, h5{
+        font-family: GlosaHeadline,Arial,sans-serif;
+        font-weight: 700;
+        color: #000;
+    }
+
+    /*Apartir de esta aqui empieza lo que es el codigo del submenu*/
+
+    .fondo {
+        background-color: var(--orange);
+        font-size: 18px;
+    }
+
+    .second {
+        width: 100%;
+        height: 42px;
+        background-color: var(--azulOscuro);
+        display: flex;
+        align-items: center;
+        color: var(--blanco);
+        overflow: hidden;
+    }
+
+    .second ul {
+        align-items: center;
+        list-style: none;
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .second-1 div i{
+        font-size: 25px;
+        cursor: pointer;
+        border: 1px solid transparent;
+        border-radius: 3px;
+    }
+
+    .second li {
+        padding: 5px 10px;
+        font-size: 15px;
+        margin: 7px 0;
+        cursor: pointer;
+        border: 10px;
+        margin-top: 20px;
+    }
+
+    .second-1 {
+        flex: 0.06;
+        display:  flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .second-1 div {
+        display: flex;
+        align-items: center;
+        padding-left: 5px;
+    }
+
+    .second-2 {
+        display: flex;
+        flex: 0.74;
+        justify-content: flex-start;
+    }
+
+    .second-1 div span {
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+    /*Aqui termina lo que es el codigo del submenu*/
+
+    /*Apartir de esta aqui empieza lo que es el codigo del sidebar*/
+    .sidebar{
+        background-color: var(--blanco);
+        width: 380px;
+        height: 100%;
+        transform: translateX(-390px);
+        transition: all 0.5s;
+        height: 100%;
+        position: absolute;
+        z-index: 101;
+        overflow: scroll;
+        
+    }
+
+    .hdn-head{ /*Aqui en este apartado va el logo*/
+        background-color: var(--orange);
+        height: 60px;
+        width: 100%;
+        color: var(--blanco);
+        text-align: center;
+    }
+
+    .hdn-head h3{
+        line-height: 60px;
+    }
+    
+    .hdn-content {
+        padding: 20px 25px;
+        color: var(--oscuro);
+    }
+
+    .hdn-content ul div {
+        display: flex;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 14px;
+        color: var(--oscuro);
+        padding: 15px 25px;
+        justify-content: space-between;
+    }
+
+    .fa-xmark {
+        top: 20px;
+        left: 400px;
+        position: absolute;
+        font-size: 30px;
+        display: none;
+        z-index: 101;
+        cursor: pointer;
+        color: var(--blanco);
+    }
+
+    .fa-angle-right {
+        color: var(--oscuro);
+    }
+
+    .hdn-content ul div:hover{
+        background-color: var(--gris);
+    }
+
+    .hdn-content ul{
+        padding-right: 9px;
+    }
+
+    .black {
+        position: absolute;
+        width: 0%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+    
+    .black.active {
+        width: 100%;
+        z-index: 100;
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .fa-xmark.active {
+        display: block;
+    }
+@media screen and (max-width: 768px) {
+    .sidebar {
+        width: 80%;
+        transform: translateX(-100%);
+    }
+
+    .fa-xmark {
+        left: 90%;
+    }
+}
+    /* Estilos específicos para dispositivos más pequeños utilizando media queries */
+
+    /*Este codigo sirve para obtener la hora y la fecha*/
+    #current_date {
+        text-align: center;
+        padding: 10px;
+        font-size: 18px;
+    }
+
+
+/* ESTE CODIGO PERTENECE A LA BIBLIOGRAFIA DEL AUTOR */
+
+.container-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    padding: 20px 20px; /* Ajusto el margen superior e inferior */
+
+}
+
+.card-autor {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background: #fff;
+    border-radius: 2px;
+}
+
+.head {
+    border-right: none;
+}
+
+.head, .social{
+    padding: 10px;
+    text-align: center;
+}
+
+.head a {
+    position: relative;
+    display: block;
+}
+
+.head img {
+    border-radius: 50%;
+    box-shadow: 0 0 0 8px rgba(248, 242, 242, 0.6);
+    margin: 20px 30px;
+    transition: .2s;
+}
+
+.head a:hover img {
+    box-shadow: 0 0 0 12px rgba(0, 0, 0, 0.1);
+}
+
+.head h2 {
+    color: #ff4747;
+}
+
+.head h4 {
+    margin-bottom: 20px;
+}
+
+.descripcion {
+    position: relative;
+}
+
+.descripcion p {
+    margin: 20px 30px;
+}
+
+.descripcion .social {
+    margin-top: 25px;
+}
+
+.descripcion .social a {
+    display: inline-block;
+    padding: 0 15px;
+    color: #ff4747;
+    font-size: 25px;
+}
+
+/* Media query para dispositivos con ancho igual o menor a 768px */
+@media (max-width: 768px) {
+    .card-autor {
+        width: 100%;
+    }
+
+    .head img {
+        margin: 20px 0;
+    }
+}
+
+.link-color{
+    color: inherit;
+    text-decoration: inherit;
+}
+.link-color:hover{
+    color: var(--gris);
+}
