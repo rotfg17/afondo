@@ -295,3 +295,7 @@
 .link-color:hover{
     color: var(--gris);
 }
+
+.texto{
+    font-size: 18px;
+}

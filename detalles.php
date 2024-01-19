@@ -1,6 +1,7 @@
 <?php
 require 'php/database.php';
 require 'php/config.php';
+require 'php/funciones.php';
 
 $db = new Database();
 $con = $db->conectar();
@@ -27,6 +28,8 @@ if ($id == '' || $token == '')  {
     $token_tmp = hash_hmac('sha256', $id, KEY_TOKEN);
 
     if ($token == $token_tmp) {
+
+        
         // Si los tokens coinciden, se continúa con la ejecución.
         $sql = $con->prepare("SELECT a.id, a.titulo, a.subtitulo, a.contenido, a.fecha, a.imagen, c.nombre as nombre_categoria, autor.nombres as nombre_autor, autor.region as region_autor
             FROM articulo a
@@ -129,7 +132,7 @@ if ($id == '' || $token == '')  {
     </ul>
       <br>
         <h6 class="blog-post-title mb-1"><b><?php echo $row['nombre_autor']; ?></b></h6>
-        <p class="blog-post-meta"><?php echo $row['region_autor']; ?> | <?php echo $fecha_formateada; ?></p>
+        <p class="blog-post-meta texto"><?php echo $row['region_autor']; ?> - <?php echo $fecha_formateada; ?></p>
         <hr>
             <div class="image-container">
         <?php
@@ -145,7 +148,7 @@ if ($id == '' || $token == '')  {
 
         <blockquote class="blockquote">
         </blockquote>
-        <p><?php echo $row['titulo']; ?> <b>Aqui va todo el contenido</b></p>
+        <?php echo $row['contenido']; ?>
         
       </article>
 
@@ -161,8 +164,9 @@ if ($id == '' || $token == '')  {
     <a href="actualidad.php" class="link-color"><?php echo $row['nombre_categoria']; ?></a><br>
     <h5 class="card-text">
     <a href="detalles.php?id=<?php echo $row['id']; ?>&token=<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>"class="link-color">
-        <?php echo $row['titulo']; ?></a>
+        <?php echo $row['titulo']; ?>
     </h5>
+    </a>
     </li>
 
         <hr>

@@ -6,64 +6,36 @@ require '../../php/database.php';
 $db = new Database();
 $con = $db->conectar();
 
-$id_categoria = isset($_POST["categoria"]) ? $_POST["categoria"] : 1;
-// Obtener las categorías disponibles
+    $id = $_GET['id'];
+
+// Realiza una consulta SQL para obtener los detalles del producto con el ID proporcionado y asegura que el producto esté activo.
+$sql = $con->prepare("SELECT id, titulo, subtitulo, contenido, id_categoria, imagen FROM articulo
+WHERE id = ? AND activo = 1");
+$sql->execute([$id]);
+$entrada = $sql->fetch(PDO::FETCH_ASSOC);
+
+// Realiza una consulta SQL para obtener todas las categorías activas en la base de datos.
 $sql = "SELECT id, nombre FROM categoria WHERE activo = 1";
 $resultado = $con->query($sql);
 $categorias = $resultado->fetchAll(PDO::FETCH_ASSOC);
 
-// Verificar si se ha proporcionado un ID válido
-if(isset($_GET['id']) && is_numeric($_GET['id'])) {
-    $id = $_GET['id'];
+// Establece la ruta para las imágenes del producto y recopila los nombres de archivo de las imágenes disponibles en el directorio.
+$rutaImagenes = '../../img/entradas/' . $id . '/';
+$imagenPrincipal = $rutaImagenes . 'principal.jpg';
 
-    // Obtener los detalles de la entrada existente
-    $stmt = $con->prepare("SELECT id, titulo, subtitulo, contenido, id_categoria, imagen FROM articulo WHERE id = ? AND activo =1");
-    $stmt->execute([$id]);
-    $entrada = $stmt->fetch(PDO::FETCH_ASSOC);
+$imagenes = [];
+$dirInit = dir($rutaImagenes);
 
-    // Verificar si la entrada existe
-    if (!$entrada) {
-        echo "Entrada no encontrada.";
-        exit;
-    }
-} else {
-    echo "ID de entrada no válido.";
-    exit;
+// Recorre el directorio de imágenes y recopila los nombres de archivo de las imágenes disponibles.
+while (($archivo = $dirInit->read()) !== false) {
+  if($archivo != 'principal.jpg' && (strpos($archivo, 'jpg') || strpos($archivo, 'jpeg')|| strpos($archivo, 'png') || strpos($archivo, 'webp'))){
+    $image = $rutaImagenes . $archivo;
+    $imagenes[] = $image;
+  }
 }
 
-// Procesar la actualización cuando se envíe el formulario de edición
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $titulo = $_POST["titulo"];
-    $subtitulo = $_POST["subtitulo"];
-    $contenido = $_POST["contenido"];
+$dirInit->close();
 
-    // Manejo de la imagen
-    if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] == UPLOAD_ERR_OK) {
-        $imagen_nombre = $_FILES['imagen']['name'];
-        $imagen_temp = $_FILES['imagen']['tmp_name'];
-
-        // Mover la imagen a una ubicación permanente
-        $carpeta_destino = '../../img/entradas/';
-        $ruta_imagen = $carpeta_destino . $imagen_nombre;
-        move_uploaded_file($imagen_temp, $ruta_imagen);
-    } else {
-        // Mantener la imagen actual si no se selecciona una nueva
-        $ruta_imagen = $entrada['imagen'];
-    }
-
-    // Actualizar la entrada en la base de datos
-    $stmt = $con->prepare("UPDATE articulo SET titulo = :titulo, subtitulo = :subtitulo, contenido = :contenido, id_categoria = :categoria, imagen = :imagen WHERE id = :id");
-    $stmt->bindParam(':titulo', $titulo);
-    $stmt->bindParam(':subtitulo', $subtitulo);
-    $stmt->bindParam(':contenido', $contenido);
-    $stmt->bindParam(':categoria', $id_categoria);
-    $stmt->bindParam(':imagen', $ruta_imagen);
-    $stmt->bindParam(':id', $id);
-
-    $stmt->execute();
-
-    header("Location: index.php");
-}
 ?>
 
 <style>
@@ -87,8 +59,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <div class="container-fluid px-4">
 <h2  class="mt-3">Editar Entrada</h2>
     
-    <form action="edita.php?id=<?= $id ?>" method="post" enctype="multipart/form-data" autocomplete="off"><!--Aqui empieza el formulario-->
-        <!---->
+    <form action="actualiza.php" method="post" enctype="multipart/form-data" autocomplete="off"><!--Aqui empieza el formulario-->
+    <input type="hidden" name="id" value="<?php echo $entrada['id']; ?>">
             <div class="mb-3"><!--Aqui inicia el input de titulo-->
             <label for="titulo" class="form-label">Titulo</label>
               <input type="text" class="form-control" name="titulo" id="titulo" value="<?php echo $entrada['titulo']; ?>" required autofocus>
@@ -111,12 +83,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div><!--Aqui termina el el div del file para agregar imagen-->
             </div>
 
-            <div class="">
+            <div class="row col-md-6 mb-4"><!--Aqui empieza el div para agregar imagen-->
+                <div class="col">
+                <?php if(file_exists($imagenPrincipal)) {  ?>
+                    <img src="<?php echo $imagenPrincipal . '?id=' . time(); ?>" class="img-thumbnail my-3"><br>
+                    <button class="btn btn-danger btn-sm" onclick="elimaImagen('<?php echo $imagenPrincipal; ?>')"><i class="fa-regular fa-trash-can"></i></button>
+                    <?php } ?>
+                </div><!--Aqui termina el el div del file para agregar imagen-->
+            </div>
+
+                    <div class="">
                         <label for="categoria" class="form-label">Categoría</label>
                         <select class="form-select " name="categoria" id="categoria" required>
                             <option value="">Seleccionar categoría</option>
                             <?php foreach($categorias as $categoria)  { ?>
-                            <option value="<?php echo $categoria['id']; ?>"><?php echo $categoria['nombre']; ?></option>
+                            <option value="<?php echo $categoria['id']; ?>" <?php if($categoria['id'] == $entrada['id_categoria']) 
+                            echo 'selected'; ?>><?php echo $categoria['nombre']; ?></option>
                             <?php } ?>
                         </select>
                     </div>
@@ -129,11 +111,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <?php require '../footer.php'; ?>
 
 <script>
-ClassicEditor
-    .create(document.querySelector('#editor'))
-    .catch(error => {
-        console.error(error);
-    });
+    ClassicEditor
+        .create( document.querySelector( '#editor' ) )
+        .catch( error => {
+            console.error( error );
+        } );
+
+        function elimaImagen(urlImagen) {
+          let url = 'eliminar_imagen.php'
+          let formData = new FormData()
+          formData.append('urlImagen', urlImagen)
+
+          fetch(url, {
+            method: 'POST',
+            body: formData
+          }).then((response) => {
+            if (response.ok){
+                location.reload()
+            }
+          })
+        }
 </script>
 
 <script src="js/scripts.js"></script>
