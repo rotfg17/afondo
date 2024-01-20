@@ -1,77 +1,26 @@
 <?php
+
 require 'php/database.php';
 require 'php/config.php';
 require 'php/funciones.php';
 
-$sql = $con->prepare("SELECT id, titulo, subtitulo, contenido FROM articulo WHERE activo = 1  ORDER BY fecha ");
+$sql = $con->prepare("SELECT id, titulo, subtitulo, contenido FROM articulo WHERE activo = 1 AND id_categoria = 1 ORDER BY fecha ");
 $sql->execute();
 $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Procesamiento del formulario solo cuando se envía
-    $titulo = $_POST["titulo"];
-    $contenido = $_POST["contenido"];
-    // Manejo de la imagen
-    if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] == UPLOAD_ERR_OK) {
-        $imagen_nombre = $_FILES['imagen']['name'];
-        $imagen_temp = $_FILES['imagen']['tmp_name'];
-
-        // Mover la imagen a una ubicación permanente
-        $carpeta_destino = 'img/entradas/';
-        $ruta_imagen = $carpeta_destino . $imagen_nombre;
-        move_uploaded_file($imagen_temp, $ruta_imagen);
-    } else {
-        // Manejar el caso en el que no se seleccionó una imagen
-        $ruta_imagen = null; // O establece una ruta predeterminada si lo prefieres
-    }
-}
 
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>A fondo con Andreina</title>
-
+    <title>A fondo con Andreina - Actualidad</title>
 </head>
-
 <body>
-    <?php require 'header.php' ?>
+<?php include 'header.php'; ?> 
 
-    <!-- Aquí comienza el inicio del carrusel para poner promociones o anuncios relevantes -->
-    <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="img/anuncio.jpeg" class="d-block w-100 p-4 img-thumbnail" style="max-height: 500px;"
-                    alt="Anuncio de ayuntamiento">
-            </div>
-            <div class="carousel-item">
-                <img src="img/anuncio.jpeg" class="d-block w-100 p-4 img-thumbnail" style="max-height: 500px;"
-                    alt="Anuncio 1">
-            </div>
-            <div class="carousel-item">
-                <img src="img/anuncio.jpeg" class="d-block w-100 p-4 img-thumbnail" style="max-height: 500px;"
-                    alt="Anuncio 3">
-            </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-    </div><!-- Aquí termina el inicio del carrusel para poner promociones o anuncios relevantes -->
-
-
-
-
-    <main class="container py-5">
+<main class="container py-5">
         <div class="row">
             <div class="col-lg-9">
                 <div class="row" data-masonry='{"percentPosition": true }'>
@@ -170,7 +119,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="col-md-2">
                     <div class="efecto">
                         <a href="detalles.php?id=<?php echo $miniaturas['id']; ?>&token=<?php echo hash_hmac('sha256', $miniaturas['id'], KEY_TOKEN); ?>" class=" link-color">
-                        <img src="img/entradas/<?php echo $imagen; ?>" class="img-fluid" alt="">
+                            <img src="<?php echo $imagen; ?>" alt="imagen-entrada" class="card-img-top">
                         </a>
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
@@ -187,7 +136,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
 </div>
-    <script src="js/apps.js"></script>
-</body>
 
+<script src="js/apps.js"></script>
+</body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+

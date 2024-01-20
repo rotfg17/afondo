@@ -1,6 +1,7 @@
 <?php
 require 'php/database.php';
 require 'php/config.php';
+require 'php/funciones.php';
 
 $db = new Database();
 $con = $db->conectar();
@@ -8,6 +9,10 @@ $con = $db->conectar();
 $stmt = $con->prepare("SELECT id, nombre FROM categoria WHERE activo = 1 ");
 $stmt->execute();
 $entradas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$sql2 = $con->prepare("SELECT id, nombres, region  FROM  autor WHERE activo = 1");
+        $sql2->execute();
+        $resultado = $sql2->fetchAll(PDO::FETCH_ASSOC);
 
 
 // Se verifica si se ha proporcionado un valor para 'id' y 'token' a través del método GET y se asignan a las variables correspondientes.
@@ -23,27 +28,39 @@ if ($id == '' || $token == '')  {
     $token_tmp = hash_hmac('sha256', $id, KEY_TOKEN);
 
     if ($token == $token_tmp) {
+
+
         // Si los tokens coinciden, se continúa con la ejecución.
-        $sql = $con->prepare("SELECT m.id, m.titulo, m.contenido, m.fecha, m.imagen, m.subtitulo, c.nombre as nombre
-                             FROM miniaturas m
-                             INNER JOIN categoria c ON m.id = c.id
-                             WHERE m.activo = 1 AND c.activo = 1
-                             LIMIT 1");
+        $sql = $con->prepare("SELECT a.id, a.titulo, a.subtitulo, a.contenido, a.fecha, a.imagen, c.nombre as nombre_categoria, autor.nombres as nombre_autor, autor.region as region_autor
+            FROM articulo a
+            INNER JOIN categoria c ON a.id_categoria = c.id
+            INNER JOIN autor ON a.id_autor = autor.id
+            WHERE a.activo = 1 AND c.activo = 1 AND autor.activo = 1
+            LIMIT 1");
         $sql->execute();
         $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
-
+    
         // Se verifica si la consulta devuelve resultados.
         if (count($resultado) > 0) {
             // Si existen productos con el 'id' proporcionado, se procede a obtener información adicional.
-
+    
             // Se obtienen los datos de la miniatura y la categoría.
+            $meses_espanol = array(
+                'ene.', 'feb.', 'mar.', 'abr.', 'may.', 'jun.', 'jul.', 'ago.', 'sep.', 'oct.', 'nov.', 'dic.'
+            );
             $row = $resultado[0];
             $titulo = $row['titulo'];
             $contenido = $row['contenido'];
             $fecha = $row['fecha'];
-            $categoria_nombre = $row['nombre'];
+            $mes_numero = date('n', strtotime($fecha));
+            $nombre_mes_espanol = $meses_espanol[$mes_numero - 1];
+            $fecha_formateada = $nombre_mes_espanol . date(" d, Y | h:i a", strtotime($fecha));
+            $nombre_categoria = $row['nombre_categoria']; // Cambiado para reflejar el alias correcto
+            $nombre_autor = $row['nombre_autor']; // Cambiado para reflejar el alias correcto
+            $region_autor = $row['region_autor'];
+            
             // Se define la ubicación de las imágenes del producto.
-            $dir_images = 'img/miniaturas/' . $id . '/';
+            $dir_images = 'img/entradas/' . $id . '/';
             // Se crea un array para almacenar las rutas de las imágenes.
             $imagenes = [];
             // Se definen las rutas de las diferentes versiones de imágenes del producto.
@@ -100,7 +117,7 @@ if ($id == '' || $token == '')  {
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="index.php">Inicio</a></li>
-    <li class="breadcrumb-item active" aria-current="page"><?php echo $row['nombre']; ?></li>
+    <li class="breadcrumb-item active" aria-current="page"><?php echo $row['nombre_categoria']; ?></li>
   </ol>
 </nav>
   <div class="row g-5">
@@ -110,10 +127,12 @@ if ($id == '' || $token == '')  {
       </h1>
 
       <article class="blog-post">
-      <h4 class="blog-post-title mb-1"><?php echo $row['subtitulo']; ?>nombre del autor que publicó</h4>
+      <ul>
+        <li><h3 class="blog-post-title mb-1"><?php echo $row['subtitulo']; ?></h3></li>
+    </ul>
       <br>
-        <h6 class="blog-post-title mb-1"><b>nombre del autor que publicó</b></h6>
-        <p class="blog-post-meta"><?php echo $row['titulo']; ?><b> Fecha cuando se publicó el articulo</b></p>
+        <h6 class="blog-post-title mb-1"><b><?php echo $row['nombre_autor']; ?></b></h6>
+        <p class="blog-post-meta texto"><?php echo $row['region_autor']; ?> - <?php echo $fecha_formateada; ?></p>
         <hr>
             <div class="image-container">
         <?php
@@ -129,7 +148,7 @@ if ($id == '' || $token == '')  {
 
         <blockquote class="blockquote">
         </blockquote>
-        <p><?php echo $row['titulo']; ?> <b>Aqui va todo el contenido</b></p>
+        <?php echo $row['contenido']; ?>
         
       </article>
 
@@ -138,63 +157,16 @@ if ($id == '' || $token == '')  {
     <div class="col-md-4 ">
     <div class="position-sticky" style="top: 2rem;">
         <div class="p-4 mb-3 ">
-        <style>
-        .card-autor {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            background-color: #f8f9fa; /* Color de fondo */
-            border-radius: 10px; 
-        }
-
-        .head {
-            margin-top: 20px;
-        }
-
-        .head img {
-            border-radius: 50%; /* Forma la imagen en un círculo */
-            margin-bottom: 10px;
-        }
-
-        h2 {
-            color: #007bff; /* Color del encabezado */
-            margin-bottom: 5px;
-        }
-
-        h4 {
-            color: #6c757d; /* Color del subencabezado */
-            margin-bottom: 20px;
-        }
-        p {
-            color: #495057; /* Color del texto principal */
-            font-size: 16px;
-            line-height: 1.6;
-        }
-    </style>
-<div class="container-fluid px-4">
-    <div class="card-autor">
-        <div class="head">
-            <a href="">
-                <img src="img/autor.jpeg" alt="Foto del autor" width="150px" height="180px">
-            </a>
-            <h2>Andreina Chalas</h2>
-            <h4>Periodista, Locutora y Relacionista Público.</h4>
-        </div>
-        <div class="descripcion">
-            <p>Periodista egresada de la Universidad Autónoma de Santo Domingo (UASD), con un postgrado en Relaciones Pùblicas. Locutora, productora y presentadora de TV.</p>
-        </div>
-    </div>
-    
     <div class="px-4 bg-light">
     <h4 class="fst-italic">Archives</h4>
     <ol class="list-unstyled mb-0">
     <li>
-    <a href="actualidad.php" class="link-color"><?php echo $row['nombre']; ?></a><br>
+    <a href="actualidad.php" class="link-color"><?php echo $row['nombre_categoria']; ?></a><br>
     <h5 class="card-text">
-    <a href="detalles_miniaturas.php?id=<?php echo $row['id']; ?>&token=<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>"class="link-color">
-        <?php echo $row['titulo']; ?></a>
+    <a href="detalles.php?id=<?php echo $row['id']; ?>&token=<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>"class="link-color">
+        <?php echo $row['titulo']; ?>
     </h5>
+    </a>
     </li>
 
         <hr>

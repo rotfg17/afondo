@@ -2,7 +2,9 @@
 <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://kit.fontawesome.com/81581fb069.js" crossorigin="anonymous"></script>
+<link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
 <link rel="stylesheet" href="css/style.css">
+
 
 <!-- Aqui comienza el codigo de las SECCIONES en la parte de menu de hamburguesa  -->
 <div class="sidebar">

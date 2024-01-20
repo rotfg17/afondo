@@ -29,14 +29,9 @@ if ($id == '' || $token == '')  {
 
     if ($token == $token_tmp) {
 
-        
+
         // Si los tokens coinciden, se continúa con la ejecución.
-        $sql = $con->prepare("SELECT a.id, a.titulo, a.subtitulo, a.contenido, a.fecha, a.imagen, c.nombre as nombre_categoria, autor.nombres as nombre_autor, autor.region as region_autor
-            FROM articulo a
-            INNER JOIN categoria c ON a.id_categoria = c.id
-            INNER JOIN autor ON a.id_autor = autor.id
-            WHERE a.activo = 1 AND c.activo = 1 AND autor.activo = 1
-            LIMIT 1");
+        $sql = $con->prepare("SELECT id, titulo, subtitulo, contenido FROM articulo WHERE activo = 1 LIMIT 1");
         $sql->execute();
         $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
     
@@ -51,13 +46,8 @@ if ($id == '' || $token == '')  {
             $row = $resultado[0];
             $titulo = $row['titulo'];
             $contenido = $row['contenido'];
-            $fecha = $row['fecha'];
-            $mes_numero = date('n', strtotime($fecha));
-            $nombre_mes_espanol = $meses_espanol[$mes_numero - 1];
-            $fecha_formateada = $nombre_mes_espanol . date(" d, Y | h:i a", strtotime($fecha));
-            $nombre_categoria = $row['nombre_categoria']; // Cambiado para reflejar el alias correcto
-            $nombre_autor = $row['nombre_autor']; // Cambiado para reflejar el alias correcto
-            $region_autor = $row['region_autor'];
+            
+            
             
             // Se define la ubicación de las imágenes del producto.
             $dir_images = 'img/entradas/' . $id . '/';
@@ -114,12 +104,6 @@ if ($id == '' || $token == '')  {
 <?php require 'header.php' ?>
 
 <main class="container p-4">
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="index.php">Inicio</a></li>
-    <li class="breadcrumb-item active" aria-current="page"><?php echo $row['nombre_categoria']; ?></li>
-  </ol>
-</nav>
   <div class="row g-5">
     <div class="col-md-8">
       <h1 class="pb-4 mb-4 fst-italic ">
@@ -131,8 +115,6 @@ if ($id == '' || $token == '')  {
         <li><h3 class="blog-post-title mb-1"><?php echo $row['subtitulo']; ?></h3></li>
     </ul>
       <br>
-        <h6 class="blog-post-title mb-1"><b><?php echo $row['nombre_autor']; ?></b></h6>
-        <p class="blog-post-meta texto"><?php echo $row['region_autor']; ?> - <?php echo $fecha_formateada; ?></p>
         <hr>
             <div class="image-container">
         <?php
@@ -158,38 +140,41 @@ if ($id == '' || $token == '')  {
     <div class="position-sticky" style="top: 2rem;">
         <div class="p-4 mb-3 ">
     <div class="px-4 bg-light">
-    <h4 class="fst-italic">Archives</h4>
-    <ol class="list-unstyled mb-0">
-    <li>
-    <a href="actualidad.php" class="link-color"><?php echo $row['nombre_categoria']; ?></a><br>
-    <h5 class="card-text">
-    <a href="detalles.php?id=<?php echo $row['id']; ?>&token=<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>"class="link-color">
-        <?php echo $row['titulo']; ?>
-    </h5>
-    </a>
-    </li>
+    <h3 class="fst-italic">Relacionadas</h3><hr>
+    <aside class="">
+                <?php
+    $contador = 0; // Inicializamos el contador
 
-        <hr>
-        <li><a href="#">February 2021</a></li>
-        <li><a href="#">January 2021</a></li>
-        <li><a href="#">December 2020</a></li>
-        <li><a href="#">November 2020</a></li>
-        <li><a href="#">October 2020</a></li>
-        <li><a href="#">September 2020</a></li>
-        <li><a href="#">August 2020</a></li>
-        <li><a href="#">July 2020</a></li>
-        <li><a href="#">June 2020</a></li>
-        <li><a href="#">May 2020</a></li>
-        <li><a href="#">April 2020</a></li>
-    </ol>
-</div>
+    // Mezcla el array de $resultado de forma aleatoria
+    shuffle($resultado);
+
+    foreach ($resultado as $row) {
+        if ($contador < 7) { // Limitamos a 6 entradas
+    ?>
+                <div class="mb-4">
+                    <div class="card-body">
+                        <h5 class="card-text fst-italic">
+                            <a href="#" class="link-color">
+                                <?php echo $row['titulo']; ?>
+                                <hr>
+                            </a>
+                        </h5>
+                    </div>
+                </div>
+                <?php
+            $contador++; // Incrementamos el contador
+        } else {
+            break; // Salimos del bucle si ya hemos mostrado 6 entradas
+        }
+    }
+    ?>
+    </aside>
 
 <div class="p-3 bg-light">
-    <h4 class="fst-italic">Elsewhere</h4>
+    <h4 class="fst-italic">Redes Sociales</h4>
     <ol class="list-unstyled">
-        <li><a href="#">GitHub</a></li>
-        <li><a href="#">Twitter</a></li>
         <li><a href="#">Facebook</a></li>
+        <li><a href="#">Instagram</a></li>
     </ol>
 </div>
 

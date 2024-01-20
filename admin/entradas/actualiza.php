@@ -19,7 +19,7 @@ if($stm->execute([$titulo, $subtitulo, $contenido, $categoria, $id])){
     $id = $_POST['id'];
 
        // Establecer la ubicación de las imágenes
-   $dir = '../../img/productos/' . $id . '/';
+   $dir = '../../img/entradas/' . $id . '/';
    if (!file_exists($dir)) {
        mkdir($dir, 0777, true); // Crea la carpeta si no existe
    }
@@ -27,8 +27,8 @@ if($stm->execute([$titulo, $subtitulo, $contenido, $categoria, $id])){
    $permitidos = ['jpeg', 'jpg', 'png', 'webp'];
    
    // Subir imagen principal si se proporciona
-   if ($_FILES['imagen_principal']['error'] == UPLOAD_ERR_OK) {
-       $archivo_principal = $_FILES['imagen_principal'];
+   if ($_FILES['imagen']['error'] == UPLOAD_ERR_OK) {
+       $archivo_principal = $_FILES['imagen'];
    
        $extension = strtolower(pathinfo($archivo_principal['name'], PATHINFO_EXTENSION));
    

@@ -51,7 +51,7 @@
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                        <a class="nav-link" href="inicio.php">
+                        <a class="nav-link" href="../inicio.php">
                             <div class="sb-nav-link-icon"><i class="bx bx-home-alt icon"></i></div>
                             Inicio
                         </a>
@@ -59,17 +59,9 @@
                             <div class="sb-nav-link-icon"><i class='bx bx-news icon'></i></div>
                             <span class="text nav-text">Entradas</span>
                         </a>
-                        <a class="nav-link"  href="<?php echo ADMIN_URL;?>relevantes">
-                        <div class="sb-nav-link-icon"><i class='bx bx-notepad icon'></i></div>
-                            <span class="text nav-text">Relevantes</span>
-                        </a>
                         <a class="nav-link" href="<?php echo ADMIN_URL;?>categorias">
                         <div class="sb-nav-link-icon"><i class='bx bx-category-alt icon'></i></div>
                             <span class="text nav-text">Categorías</span>
-                        </a>
-                        <a class="nav-link" href="<?php echo ADMIN_URL;?>miniaturas">
-                        <div class="sb-nav-link-icon"><i class='bx bx-image-alt icon'></i></div>
-                            <span class="text nav-text">Miniaturas</span>
                         </a>
                         <a class="nav-link" href="#">
                         <div class="sb-nav-link-icon"><i class='bx bx-slideshow icon'></i></div>
