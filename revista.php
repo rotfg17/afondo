@@ -68,39 +68,71 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
             }
             ?>
                 </div>
+                
             </div>
 
 
-            <!--AQUI EMPIEZA EL CODIGO DEL ASIDE-->
-            <aside class="col-lg-3">
-                <?php
+           <!-- AQUÍ EMPIEZA EL CÓDIGO DEL ASIDE -->
+           <aside class="col-lg-3">
+    <?php
     $contador = 0; // Inicializamos el contador
 
-    // Mezcla el array de $resultado de forma aleatoria
-    shuffle($resultado);
+    // Hacemos una copia de $resultado para evitar modificar el array original
+    $resultado_shuffle = $resultado;
+    shuffle($resultado_shuffle);
+    ?>
+    <div class="mb-4">
+        <div class="card-body">
+            <?php
+            // Recuperamos hasta 9 noticias adicionales (diferentes de la noticia actual) con su categoría.
+            $sql_noticias_relacionadas = $con->prepare("SELECT a.id, a.titulo, c.nombre AS nombre_categoria
+                                                       FROM articulo a
+                                                       JOIN categoria c ON a.id_categoria = c.id
+                                                       WHERE a.id != ?
+                                                       ORDER BY RAND() LIMIT 9");
+            $sql_noticias_relacionadas->execute([$id]);
+            $noticias_relacionadas = $sql_noticias_relacionadas->fetchAll(PDO::FETCH_ASSOC);
 
-    foreach ($resultado as $row) {
-        if ($contador < 7) { // Limitamos a 6 entradas
-    ?>
-                <div class="mb-4">
-                    <div class="card-body">
-                        <h5 class="card-text fst-italic">
-                            <a href="#" class="link-color">
-                                <?php echo $row['titulo']; ?>
-                                <hr>
-                            </a>
-                        </h5>
-                    </div>
-                </div>
+            // Mostramos las noticias relacionadas.
+            if (count($noticias_relacionadas) > 0) {
+                ?>
+                <h4>EN PORTADA</h4>
+                <hr>
+                <ul>
+                    <?php foreach ($noticias_relacionadas as $noticia) {
+                        if ($contador < 4) { // Limitamos a 7 entradas
+                            ?>
+                            <li>
+                                <div class="mb-2 categoria <?php echo strtolower($noticia['nombre_categoria']); ?>">
+                                    <a class="text-decoration-none n-link"
+                                       href="<?php echo strtolower($noticia['nombre_categoria']); ?>.php"><?php echo $noticia['nombre_categoria']; ?></a>
+                                </div>
+                                <span>
+                                    <a class="text-decoration-none textoo"
+                                       href="detalles.php?id=<?php echo $noticia['id']; ?>&token=<?php echo hash_hmac('sha256', $noticia['id'], KEY_TOKEN); ?>">
+                                        <?php echo $noticia['titulo']; ?>
+                                        <hr>
+                                    </a>
+                                </span>
+                            </li>
+                            <?php
+                            $contador++; // Incrementamos el contador
+                        } else {
+                            break; // Salimos del bucle si ya hemos mostrado 7 entradas
+                        }
+                    } ?>
+                </ul>
                 <?php
-            $contador++; // Incrementamos el contador
-        } else {
-            break; // Salimos del bucle si ya hemos mostrado 6 entradas
-        }
-    }
-    ?>
-    </aside>
-   <!--AQUI TERMINA EL CODIGO DEL ASIDE-->
+            } else {
+                // Si no se encuentran noticias relacionadas, se muestra un mensaje.
+                echo '<p>No hay noticias relacionadas disponibles.</p>';
+            }
+            ?>
+        </div>
+    </div>
+</aside>
+
+<!-- AQUÍ TERMINA EL CÓDIGO DEL ASIDE -->
         </div>
     </main>
 

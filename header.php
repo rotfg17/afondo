@@ -113,7 +113,7 @@
     <ul>
       <li><a href="actualidad.php" class="text-decoration-none text-white">Actualidad</a></li>
       <li><a href="deportes.php" class="text-decoration-none text-white">Deportes</a></li>
-      <li><a href="turismp.php" class="text-decoration-none text-white">Turismo</a></li>
+      <li><a href="turismo.php" class="text-decoration-none text-white">Turismo</a></li>
       <li><a href="revista.php" class="text-decoration-none text-white">Revista</a></li>
     </ul>
   </div>

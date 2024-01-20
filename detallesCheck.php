@@ -55,6 +55,9 @@ if ($id == '' || $token == '')  {
             $mes_numero = date('n', strtotime($fecha));
             $nombre_mes_espanol = $meses_espanol[$mes_numero - 1];
             $fecha_formateada = $nombre_mes_espanol . date(" d, Y | h:i a", strtotime($fecha));
+            $meses_espanol = array(
+                'ene.', 'feb.', 'mar.', 'abr.', 'may.', 'jun.', 'jul.', 'ago.', 'sep.', 'oct.', 'nov.', 'dic.'
+            );
             $nombre_categoria = $row['nombre_categoria']; // Cambiado para reflejar el alias correcto
             $nombre_autor = $row['nombre_autor']; // Cambiado para reflejar el alias correcto
             $region_autor = $row['region_autor'];
