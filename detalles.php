@@ -6,13 +6,6 @@ require 'php/funciones.php';
 $db = new Database();
 $con = $db->conectar();
 
-$stmt = $con->prepare("SELECT id, nombre FROM categoria WHERE activo = 1 ");
-$stmt->execute();
-$entradas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-$sql2 = $con->prepare("SELECT id, nombres, region  FROM  autor WHERE activo = 1");
-        $sql2->execute();
-        $resultado = $sql2->fetchAll(PDO::FETCH_ASSOC);
 
 
 // Se verifica si se ha proporcionado un valor para 'id' y 'token' a través del método GET y se asignan a las variables correspondientes.
@@ -29,10 +22,12 @@ if ($id == '' || $token == '')  {
 
     if ($token == $token_tmp) {
 
+        $sql = $con->prepare("SELECT count(id) as count FROM articulo WHERE id=? ");
+        $sql->execute([$id]);
 
         // Si los tokens coinciden, se continúa con la ejecución.
-        $sql = $con->prepare("SELECT id, titulo, subtitulo, contenido FROM articulo WHERE activo = 1 LIMIT 1");
-        $sql->execute();
+        $sql = $con->prepare("SELECT id, titulo, subtitulo, contenido FROM articulo WHERE id=?  LIMIT 1");
+        $sql->execute([$id]);
         $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
     
         // Se verifica si la consulta devuelve resultados.
@@ -44,11 +39,9 @@ if ($id == '' || $token == '')  {
                 'ene.', 'feb.', 'mar.', 'abr.', 'may.', 'jun.', 'jul.', 'ago.', 'sep.', 'oct.', 'nov.', 'dic.'
             );
             $row = $resultado[0];
+            $subtitulo = $row['subtitulo'];
             $titulo = $row['titulo'];
             $contenido = $row['contenido'];
-            
-            
-            
             // Se define la ubicación de las imágenes del producto.
             $dir_images = 'img/entradas/' . $id . '/';
             // Se crea un array para almacenar las rutas de las imágenes.
@@ -112,7 +105,7 @@ if ($id == '' || $token == '')  {
 
       <article class="blog-post">
       <ul>
-        <li><h3 class="blog-post-title mb-1"><?php echo $row['subtitulo']; ?></h3></li>
+        <li><h3 class="blog-post-title mb-1"><?php echo $subtitulo; ?></h3></li>
     </ul>
       <br>
         <hr>

@@ -91,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </h2>
                                 <?php
                                 $id = $row['id'];
-                                $imagen = "img/entradas/" . $id . "/principal.jpg";
+                                $imagen = "img/entradas/" . $id . "/principal";
 
                                 $extensiones_permitidas = ['jpg', 'jpeg', 'png', 'webp'];
 
@@ -162,15 +162,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <?php
             $numEntradasMostradas = 0;
             foreach ($resultado as $miniaturas) :
+                // Utilizamos una variable diferente para la imagen
+                $imagen_miniatura = "img/entradas/" . $miniaturas['id'] . "/principal";
+                $extensiones_permitidas_miniatura = ['jpg', 'jpeg', 'png', 'webp'];
+
+                foreach ($extensiones_permitidas_miniatura as $extension_miniatura) {
+                    $imagen_con_extension_miniatura = $imagen_miniatura . '.' . $extension_miniatura;
+                    if (file_exists($imagen_con_extension_miniatura)) {
+                        $imagen_miniatura = $imagen_con_extension_miniatura;
+                        break;
+                    }
+                }
+
+                if (!file_exists($imagen_miniatura)) {
+                    $imagen_miniatura = "img/no-photo.jpg";
+                }
+
+                // Comienza una nueva fila para cada 4 miniaturas (excepto la primera vez)
                 if ($numEntradasMostradas > 0 && $numEntradasMostradas % 4 == 0) :
-                    // Comienza una nueva fila para cada 4 miniaturas, excepto la primera vez
                     echo '</div><div class="row">';
                 endif;
             ?>
                 <div class="col-md-2">
                     <div class="efecto">
                         <a href="detalles.php?id=<?php echo $miniaturas['id']; ?>&token=<?php echo hash_hmac('sha256', $miniaturas['id'], KEY_TOKEN); ?>" class=" link-color">
-                        <img src="img/entradas/<?php echo $imagen; ?>" class="img-fluid" alt="">
+                            <img src="<?php echo $imagen_miniatura; ?>" alt="imagen-entrada" class="card-img-top">
                         </a>
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
@@ -183,10 +199,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </div>
                     </div>
                 </div>
-                <?php $numEntradasMostradas++; endforeach; ?>
+            <?php
+                $numEntradasMostradas++;
+            endforeach;
+            ?>
         </div>
     </div>
 </div>
+
+
+
     <script src="js/apps.js"></script>
 </body>
 

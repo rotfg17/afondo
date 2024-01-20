@@ -8,38 +8,38 @@
 
 <!-- Aqui comienza el codigo de las SECCIONES en la parte de menu de hamburguesa  -->
 <div class="sidebar">
-  <div class="hdn-head">
+  <div class="hdn-head ">
   <a href="index.php"><img src="img/logo.jpeg" style="width: 150px; height: auto;"></a>
   </div>
   <div class="hdn-content">
     <h3 class="text-center">SECCIONES</h3>
     <ul>
-    <a href="actualidad.php" class="no-link">
+    <a href="actualidad.php" class="no-link text-decoration-none">
       <div>
         <li>Actualidad</li><i class="fa-solid fa-angle-right"></i>
       </div><hr></a>
 
-      <a href="deportes.php" class="no-link">
+      <a href="deportes.php" class="no-link text-decoration-none">
       <div>
         <li>Deportes</li><i class="fa-solid fa-angle-right"></i>
       </div><hr></a>
 
-      <a href="revista.php" class="no-link">
+      <a href="revista.php" class="no-link text-decoration-none">
       <div>
         <li>Revista</li><i class="fa-solid fa-angle-right"></i>
       </div><hr></a>
 
-      <a href="turismo.php" class="no-link">
+      <a href="turismo.php" class="no-link text-decoration-none">
       <div>
         <li>Turismo</li><i class="fa-solid fa-angle-right"></i>
       </div><hr></a>
 
-      <a href="farandula.php" class="no-link">
+      <a href="farandula.php" class="no-link text-decoration-none">
       <div>
         <li>Farándula</li><i class="fa-solid fa-angle-right"></i>
       </div><hr></a>
 
-      <a href="economia.php" class="no-link">
+      <a href="economia.php" class="no-link text-decoration-none">
       <div>
         <li>Economía</li><i class="fa-solid fa-angle-right"></i>
       </div><hr></a>
@@ -51,23 +51,23 @@
     <h3 class="text-center">MÁS</h3>
     <ul>
 
-      <a href="contactos.php" class="no-link">
+      <a href="contactos.php" class="no-link text-decoration-none">
       <div>
         <li>Contáctanos</li><i class="fa-solid fa-angle-right"></i>
       </div><hr> 
       </a>
 
-      <a href="sobre.php" class="no-link">
+      <a href="sobre.php" class="no-link text-decoration-none">
       <div>
         <li>Sobre a fondo con Andreina</li><i class="fa-solid fa-angle-right"></i>
       </div><hr></a>
                   
-      <a href="politicas.php" class="no-link">
+      <a href="politicas.php" class="no-link text-decoration-none">
       <div>
         <li>Politicas de Privacidad</li><i class="fa-solid fa-angle-right"></i>
       </div><hr></a>
 
-      <a href="terminos.php" class="no-link">
+      <a href="terminos.php" class="no-link text-decoration-none">
       <div>
         <li>Términos y condiciones</li><i class="fa-solid fa-angle-right"></i>
       </div><hr></a>
@@ -111,10 +111,10 @@
   </div>
   <div class="second-2">
     <ul>
-      <li>Actualidad</li>
-      <li>Deportes</li>
-      <li>Turismo</li>
-      <li>Revista</li>
+      <li><a href="actualidad.php" class="text-decoration-none text-white">Actualidad</a></li>
+      <li><a href="deportes.php" class="text-decoration-none text-white">Deportes</a></li>
+      <li><a href="turismp.php" class="text-decoration-none text-white">Turismo</a></li>
+      <li><a href="revista.php" class="text-decoration-none text-white">Revista</a></li>
     </ul>
   </div>
 </div>

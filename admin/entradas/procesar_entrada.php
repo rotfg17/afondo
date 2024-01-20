@@ -52,15 +52,11 @@ $categorias = $resultado->fetchAll(PDO::FETCH_ASSOC);
               <textarea  class="form-control" name="contenido" id="editor"  required> </textarea>
             </div><!--Aqui termina el input de contenido-->
 
-            <div class="row mb-2">
+            <div class="row mb-3"><!--Aqui empieza el div para agregar imagen-->
                 <div class="col">
-                      <label for="imagen_principal" class="form-label">Imagen principal</label>
-                      <input type="file" class="form-control" name="imagen_principal" id="imagen_principal" accept="img/jpeg" required>
-                </div>
-                <div class="col">
-                <label for="otras_imagenes" class="form-label">Otras imagenes</label>
-                <input type="file" class="form-control" name="otras_imagenes[]" id="otras_imagenes" accept="img/jpeg" multiple>
-                </div>
+                      <label for="imagen" class="form-label">Imagen</label>
+                      <input type="file" class="form-control" name="imagen" id="imagen" accept="img/jpeg" required>
+                </div><!--Aqui termina el el div del file para agregar imagen-->
             </div>
 
                     <div class="">

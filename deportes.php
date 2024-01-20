@@ -15,7 +15,7 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A fondo con Andreina - Deportes</title>
+    <title>A fondo con Andreina - Revista</title>
 </head>
 <body>
 <?php include 'header.php'; ?> 
@@ -40,7 +40,7 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
                                 </h2>
                                 <?php
                                 $id = $row['id'];
-                                $imagen = "img/entradas/" . $id . "/principal.jpg";
+                                $imagen = "img/entradas/" . $id . "/principal";
 
                                 $extensiones_permitidas = ['jpg', 'jpeg', 'png', 'webp'];
 
@@ -111,15 +111,26 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
             <?php
             $numEntradasMostradas = 0;
             foreach ($resultado as $miniaturas) :
-                if ($numEntradasMostradas > 0 && $numEntradasMostradas % 4 == 0) :
-                    // Comienza una nueva fila para cada 4 miniaturas, excepto la primera vez
-                    echo '</div><div class="row">';
-                endif;
+                // Utilizamos una variable diferente para la imagen
+                $imagen_miniatura = "img/entradas/" . $miniaturas['id'] . "/principal";
+                $extensiones_permitidas_miniatura = ['jpg', 'jpeg', 'png', 'webp'];
+
+                foreach ($extensiones_permitidas_miniatura as $extension_miniatura) {
+                    $imagen_con_extension_miniatura = $imagen_miniatura . '.' . $extension_miniatura;
+                    if (file_exists($imagen_con_extension_miniatura)) {
+                        $imagen_miniatura = $imagen_con_extension_miniatura;
+                        break;
+                    }
+                }
+
+                if (!file_exists($imagen_miniatura)) {
+                    $imagen_miniatura = "img/no-photo.jpg";
+                }
             ?>
                 <div class="col-md-2">
                     <div class="efecto">
                         <a href="detalles.php?id=<?php echo $miniaturas['id']; ?>&token=<?php echo hash_hmac('sha256', $miniaturas['id'], KEY_TOKEN); ?>" class=" link-color">
-                            <img src="<?php echo $imagen; ?>" alt="imagen-entrada" class="card-img-top">
+                            <img src="<?php echo $imagen_miniatura; ?>" alt="imagen-entrada" class="card-img-top">
                         </a>
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
@@ -132,10 +143,14 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                     </div>
                 </div>
-                <?php $numEntradasMostradas++; endforeach; ?>
+            <?php
+                $numEntradasMostradas++;
+            endforeach;
+            ?>
         </div>
     </div>
 </div>
+
 
 <script src="js/apps.js"></script>
 </body>
