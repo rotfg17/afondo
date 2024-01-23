@@ -123,6 +123,26 @@ function activarUsuario($id, $con)
 }
 
 
+function slugify($text)
+{
+    // Reemplaza los caracteres especiales y espacios con guiones
+    $text = preg_replace('~[^\pL\d]+~u', '-', $text);
+
+    // Convierte a minúsculas
+    $text = mb_strtolower($text, 'UTF-8');
+
+    // Elimina cualquier caracter no alfanumérico o guiones adicionales
+    $text = preg_replace('~[^-\w]+~', '', $text);
+
+    // Elimina guiones al principio y al final del texto
+    $text = trim($text, '-');
+
+    return $text;
+}
+
+
+
+
 // Función que realiza el proceso de inicio de sesión
 function login($usuario, $password, $con)
 {
