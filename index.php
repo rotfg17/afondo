@@ -3,7 +3,7 @@ require 'php/database.php';
 require 'php/config.php';
 require 'php/funciones.php';
 
-$sql = $con->prepare("SELECT id, titulo, subtitulo, contenido, id_categoria FROM articulo WHERE activo = 1  ORDER BY fecha ");
+$sql = $con->prepare("SELECT id, titulo, subtitulo, contenido, id_categoria FROM articulo WHERE activo = 1  ORDER BY fecha DESC ");
 $sql->execute();
 $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
 
@@ -35,6 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" type="image/png" sizes="128x128"  href="img/favicon.ico">
     <title>A fondo con Andreina</title>
 
 </head>
@@ -72,7 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
     <main class="container py-5">
-    <div class="row">
+            <div class="row">
     <div class="col-lg-9">
         <div class="row" data-masonry='{"percentPosition": true }'>
             <?php
@@ -81,7 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if ($contador < 4) { // Limitamos a 4 entradas
                     // Obtener información de la categoría
                     $id_categoria = $row['id_categoria']; // Ajusta esto según la estructura real de tu base de datos
-                    $sql_categoria = $con->prepare("SELECT nombre FROM categoria WHERE id = ?");
+                    $sql_categoria = $con->prepare("SELECT nombre FROM categoria WHERE id = ? ");
                     $sql_categoria->execute([$id_categoria]);
                     $categoria = $sql_categoria->fetchColumn();
 
@@ -114,7 +115,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <?php echo $row['titulo']; ?>
                                     </a>
                                 </h2>
-                                <img src="<?php echo $imagen; ?>" class="img-fluid" alt="">
+                                <img src="<?php echo $imagen; ?>" class="img-fluid" alt="imagenes de la noticia">
                             </div>
                         </div>
                     </div>
@@ -129,15 +130,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 
 
-
             <!--AQUI EMPIEZA EL CODIGO DEL ASIDE-->
-            <aside class="col-lg-3">
+           <aside class="col-lg-3">
     <?php
     $contador = 0; // Inicializamos el contador
 
     // Hacemos una copia de $resultado para evitar modificar el array original
     $resultado_shuffle = $resultado;
     shuffle($resultado_shuffle);
+
+    // Arrays de traducción de meses y días
+    $meses_espanol = array('enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre');
+    $dias_semana_espanol = array('domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado');
     ?>
     <div class="mb-4">
         <div class="card-body">
@@ -146,7 +150,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $sql_noticias_relacionadas = $con->prepare("SELECT a.id, a.titulo, a.fecha, c.nombre AS nombre_categoria
                                                        FROM articulo a
                                                        JOIN categoria c ON a.id_categoria = c.id
-                                                       WHERE a.id != ?
+                                                       WHERE a.id != ? 
                                                        ORDER BY RAND() LIMIT 9");
             $sql_noticias_relacionadas->execute([$id]);
             $noticias_relacionadas = $sql_noticias_relacionadas->fetchAll(PDO::FETCH_ASSOC);
@@ -159,6 +163,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <ul>
                     <?php foreach ($noticias_relacionadas as $noticia) {
                         if ($contador < 5) { // Limitamos a 7 entradas
+                            // Descomponemos la fecha en partes
+                            $timestamp = strtotime($noticia['fecha']);
+                            $dia_semana = $dias_semana_espanol[date('w', $timestamp)];
+                            $dia = date('j', $timestamp);
+                            $mes = $meses_espanol[date('n', $timestamp) - 1];
+                            $anio = date('Y', $timestamp);
+                            $hora = date('h:i a', $timestamp);
                             ?>
                             <li>
                                 <div class="mb-2 categoria <?php echo strtolower($noticia['nombre_categoria']); ?>">
@@ -167,13 +178,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </div>
                                 <span>
                                     <a class="text-decoration-none textoo"
-                                       href="detalles.php?<?php echo $noticia['id']; ?>&token=<?php echo hash_hmac('sha256', $noticia['id'], KEY_TOKEN); ?>">
+                                       href="detalles.php?id=<?php echo $noticia['id']; ?>&token=<?php echo hash_hmac('sha256', $noticia['id'], KEY_TOKEN); ?>">
                                         <?php echo $noticia['titulo']; ?>
                                     </a>
                                 </span>
                                 <!-- Muestra la fecha y hora de publicación en el formato especificado -->
                                 <p class="fecha-publicacion">
-                                    <?php echo strftime('%I:%M %p | %B %e, %Y', strtotime($noticia['fecha'])); ?>
+                                    <?php echo $hora . ' | ' . $dia . ' ' . $mes . ', ' . $anio; ?>
                                 </p>
                                 <hr>
                             </li>
@@ -193,8 +204,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
 </aside>
-
-
 
    <!--AQUI TERMINA EL CODIGO DEL ASIDE-->
         </div>
@@ -273,9 +282,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </div>
 
 
-
-
-
+<?php require 'footer.php' ?>
 
     <script src="js/apps.js"></script>
 </body>

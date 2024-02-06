@@ -117,6 +117,11 @@
         
     }
 
+    .stop-scroll {
+        overflow: hidden;
+    }
+    
+
     .hdn-head{ /*Aqui en este apartado va el logo*/
         background-color: var(--orange);
         height: 60px;
@@ -190,6 +195,9 @@
     .sidebar {
         width: 80%;
         transform: translateX(-100%);
+    }
+    .stop-scroll {
+        overflow: hidden;
     }
 
     .fa-xmark {
@@ -392,3 +400,121 @@
   }
   
   
+  /*AQUI EMPIEZA EL CODIGO DEL FOOTER*/
+
+  .containers{
+    max-width: 1170px;
+    margin: auto;
+  }
+  .row{
+    display: flex;
+    flex-wrap: wrap;
+  }
+  ul{
+    list-style: none;
+  }
+  .footer{
+    background-color: var(--oscuro);
+    padding: 70px 0;
+    color:var(--blanco);
+  }
+
+  .footer-col{
+    width: 25%;
+    padding: 0 15px;
+  }
+
+  .footer-col h4{
+    font-size: 18px;
+    color: var(--blanco);
+    text-transform: capitalize;
+    margin-bottom: 30px;
+    font-weight: 500;
+    position: relative;
+  }
+
+  .footer-col h4::before{
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -10px;
+    background-color: var(--dark-orange);
+    height: 2px;
+    box-sizing: border-box ;
+    width: 50%;
+  }
+
+  .footer-col ul li a:not(:last-child){
+    margin-bottom: 10px;
+  }
+
+  .footer-col ul li a{
+    font-size: 16px;
+    text-transform: capitalize;
+    color: var(--dark-orange);
+    text-decoration: none;
+    font-weight: 300;
+    color: var(--blanco);
+    display: block;
+    transition: all 0.3s ease;
+  }
+
+  .footer-col ul li a:hover{
+    color: var(--blanco);
+    padding-left: 8px;
+  }
+
+  .footer-col .social-links a{
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+    background-color: rgba(255, 255, 255, 0.2);
+    margin: 0 10px 10px 0;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 50%;
+    color: var(--blanco);
+    transition: all 0.5s ease;
+  }
+
+  .footer-col .social-links a:hover{
+    color: var(--dark-orange);
+    background-color: var(--blanco);
+  }
+
+  .copyright {
+    display: flex;
+    justify-content: center;
+
+}
+
+    /*AQUI EMPIEZA EL CODIGO MEDIA QUERY DEL FOOTER*/
+    @media (max-width: 767px){
+        .footer-col{
+            width: 75%;
+            margin-bottom: 30px ;
+        }
+
+        .containers{
+            margin: 15px;
+        }
+
+        .copyright{
+            text-align: center;
+        }
+    }
+
+    @media (max-width: 574px){
+        .footer-col{
+            width: 100%;
+        }
+
+        .containers{
+            margin: 15px;
+        }
+
+        .copyright{
+            text-align: center;
+        }
+    }
+      
