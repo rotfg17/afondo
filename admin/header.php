@@ -64,7 +64,7 @@
                         <div class="sb-nav-link-icon"><i class='bx bx-category-alt icon'></i></div>
                             <span class="text nav-text">Categorías</span>
                         </a>
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="<?php echo ADMIN_URL;?>publicidad">
                         <div class="sb-nav-link-icon"><i class='bx bx-slideshow icon'></i></div>
                             <span class="text nav-text">Publicidad</span>
                         </a>

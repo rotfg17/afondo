@@ -45,29 +45,49 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <!-- Aquí comienza el inicio del carrusel para poner promociones o anuncios relevantes -->
     <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="img/anuncio.jpeg" class="d-block w-100 p-4 img-thumbnail" style="max-height: 500px;"
-                    alt="Anuncio de ayuntamiento">
-            </div>
-            <div class="carousel-item">
-                <img src="img/anuncio.jpeg" class="d-block w-100 p-4 img-thumbnail" style="max-height: 500px;"
-                    alt="Anuncio 1">
-            </div>
-            <div class="carousel-item">
-                <img src="img/anuncio.jpeg" class="d-block w-100 p-4 img-thumbnail" style="max-height: 500px;"
-                    alt="Anuncio 3">
-            </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-    </div><!-- Aquí termina el inicio del carrusel para poner promociones o anuncios relevantes -->
+    <div class="carousel-inner">
+        <?php
+        // Tu código PHP para obtener los datos de la base de datos y generar los elementos del carrusel
+        $sql = "SELECT * FROM publicaciones WHERE activo = 1";
+        $result = $con->query($sql);
+
+        if ($result->rowCount() > 0) {
+            $active = true;
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $id = $row['id'];
+                $imagen = "img/publicidad/" . $id . "/principal";
+                $extensiones_permitidas = ['jpg', 'jpeg', 'png', 'webp'];
+
+                foreach ($extensiones_permitidas as $extension) {
+                    $imagen_con_extension = $imagen . '.' . $extension;
+                    if (file_exists($imagen_con_extension)) {
+                        $imagen = $imagen_con_extension;
+                        break;
+                    }
+                }
+
+                if (!file_exists($imagen)) {
+                    $imagen = "img/no-photo.jpg";
+                }
+        ?>
+                <div class="carousel-item <?php echo $active ? 'active' : ''; ?>">
+                    <img src="<?php echo $imagen; ?>" class="d-block w-100 p-4 img-thumbnail" style="max-height: 500px;" alt="Anuncio">
+                </div>
+        <?php
+                $active = false;
+            }
+        } else {
+            echo "0 resultados";
+        }
+        ?>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span> </div><!-- Aquí termina el inicio del carrusel para poner promociones o anuncios relevantes -->
 
 
 
