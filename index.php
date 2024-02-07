@@ -48,14 +48,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="carousel-inner">
         <?php
         // Tu código PHP para obtener los datos de la base de datos y generar los elementos del carrusel
-        $sql = "SELECT * FROM publicaciones WHERE activo = 1";
-        $result = $con->query($sql);
+        $sql = "SELECT * FROM publicaciones";
+        $result = $conn->query($sql);
 
         if ($result->rowCount() > 0) {
             $active = true;
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                 $id = $row['id'];
-                $imagen = "img/publicidad/" . $id . "/principal";
+                $imagen = "img/entradas/" . $id . "/principal";
                 $extensiones_permitidas = ['jpg', 'jpeg', 'png', 'webp'];
 
                 foreach ($extensiones_permitidas as $extension) {
@@ -87,7 +87,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </button>
     <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span> </div><!-- Aquí termina el inicio del carrusel para poner promociones o anuncios relevantes -->
+        <span class="visually-hidden">Next</span>
+<!-- Aquí termina el inicio del carrusel para poner promociones o anuncios relevantes -->
 
 
 
