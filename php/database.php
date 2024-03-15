@@ -5,7 +5,7 @@ class Database {
     private $hostname = "localhost";     // Host de la base de datos
     private $database = "newpaper_db"; // Nombre de la base de datos
     private $username = "root";         // Nombre de usuario de la base de datos
-    private $password = "Informatico1996!"; // Contraseña de la base de datos
+    private $password = ""; // Contraseña de la base de datos
     private $charset = "utf8";           // Juego de caracteres
 
     // Método para establecer una conexión a la base de datos
